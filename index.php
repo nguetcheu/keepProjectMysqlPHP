@@ -3,8 +3,13 @@ $connection = require_once './Connection.php';
 
 $notes = $connection->getNotes();
 
-if(isset($_GET['id'])){
+$currentNote = [
+   'title' => '',
+   'description' => ''
+];
 
+if(isset($_GET['id'])){
+    $currentNote = $connection->getNoteById($_GET['id']);
 }
 
 echo '<pre>';
@@ -25,10 +30,20 @@ echo '</pre>';
 <div>
     <form class="new-note" action="create.php" method="post">
         <input type="hidden" name="id">
-        <input type="text" name="title" placeholder="Note title" autocomplete="off">
+        <input type="text" name="title"
+               placeholder="Note title" autocomplete="off"
+        value="<?php echo $currentNote['title']?>">
         <textarea name="description" cols="30" rows="4"
-                  placeholder="Note Description"></textarea>
-        <button>New note</button>
+                  placeholder="Note Description">
+                  <?php echo $currentNote['description']?>
+        </textarea>
+        <button>
+            <?php if (isset($currentNote['id'])): ?>
+            Update Note
+            <?php else: ?>
+            New note
+            <?php endif; ?>
+        </button>
     </form>
     <div class="notes">
         <?php foreach ($notes as $note): ?>
