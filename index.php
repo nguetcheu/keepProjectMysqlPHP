@@ -3,9 +3,13 @@ $connection = require_once './Connection.php';
 
 $notes = $connection->getNotes();
 
- echo '<pre>';
- var_dump($notes);
- echo '</pre>';
+if(isset($_GET['id'])){
+
+}
+
+echo '<pre>';
+var_dump($notes);
+echo '</pre>';
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +34,7 @@ $notes = $connection->getNotes();
         <?php foreach ($notes as $note): ?>
             <div class="note">
                 <div class="title">
-                    <a href=""><?php echo $note["title"] ?></a>
+                    <a href=" ?id=<?php echo $note['id'] ?>"><?php echo $note["title"] ?></a>
                 </div>
                 <div class="description">
                     <?php echo $note['description'] ?>
