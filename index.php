@@ -1,20 +1,17 @@
 <?php
-$connection = require_once './Connection.php';
-
+$connection = require_once 'Connection.php';
+// Read notes from database
 $notes = $connection->getNotes();
 
 $currentNote = [
-   'title' => '',
-   'description' => ''
+    'id' => '',
+    'title' => '',
+    'description' => ''
 ];
-
-if(isset($_GET['id'])){
+if (isset($_GET['id'])) {
     $currentNote = $connection->getNoteById($_GET['id']);
 }
 
-echo '<pre>';
-var_dump($notes);
-echo '</pre>';
 ?>
 
 <!DOCTYPE html>
@@ -29,32 +26,35 @@ echo '</pre>';
 <body>
 <div>
     <form class="new-note" action="create.php" method="post">
-        <input type="hidden" name="id">
-        <input type="text" name="title"
-               placeholder="Note title" autocomplete="off"
-        value="<?php echo $currentNote['title']?>">
+        <input type="hidden" name="id" value="<?php echo $currentNote['id'] ?>">
+        <input type="text" name="title" placeholder="Note title" autocomplete="off"
+               value="<?php echo $currentNote['title'] ?>">
         <textarea name="description" cols="30" rows="4"
-                  placeholder="Note Description">
-                  <?php echo $currentNote['description']?>
-        </textarea>
+                  placeholder="Note Description"><?php echo $currentNote['description'] ?></textarea>
         <button>
-            <?php if (isset($currentNote['id'])): ?>
-            Update Note
+            <?php if ($currentNote['id']): ?>
+                Update
             <?php else: ?>
-            New note
-            <?php endif; ?>
+                New note
+            <?php endif ?>
         </button>
     </form>
     <div class="notes">
         <?php foreach ($notes as $note): ?>
             <div class="note">
                 <div class="title">
-                    <a href=" ?id=<?php echo $note['id'] ?>"><?php echo $note["title"] ?></a>
+                    <a href="?id=<?php echo $note['id'] ?>">
+                        <?php echo $note['title'] ?>
+                    </a>
                 </div>
                 <div class="description">
                     <?php echo $note['description'] ?>
                 </div>
-                <small><?php echo $note['create_date']?></small>
+                <small><?php echo date('d/m/Y H:i', strtotime($note['create_date'])) ?></small>
+                <form action="delete.php" method="post">
+                    <input type="hidden" name="id" value="<?php echo $note['id'] ?>">
+                    <button class="close">X</button>
+                </form>
             </div>
         <?php endforeach; ?>
     </div>
